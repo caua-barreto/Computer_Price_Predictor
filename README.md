@@ -1,4 +1,4 @@
-# 💻 Computer Price Predictor — Machine Learning Relatório FINAL
+# 💻 Computer Price Predictor — Competição interna do Instituto Militar de Engenharia - Relatório
 
 ![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Boosting%20%26%20Linear-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
