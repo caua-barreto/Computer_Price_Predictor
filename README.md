@@ -7,7 +7,7 @@
 
 ---
 
-## 📌 Sobre o Projeto
+##  Sobre o Projeto
 
 Este repositório apresenta um projeto completo de **Machine Learning** para previsão de preços de computadores (laptops e desktops), utilizando um dataset de **80.000 registros** com **34 colunas** de especificações de hardware, design e conectividade.
 
@@ -24,11 +24,13 @@ O projeto foi totalmente desenvolvido em um ambiente virtual isolado (`.venv`) p
 
 ---
 
-## 🔄 Diferenciais do Projeto
+## Diferenciais do Projeto
 
-### 📊 Transformação Estatística do Target
+### Transformação Estatística do Target
 
 Durante a Análise Exploratória (EDA), identificou-se que a distribuição de preços (`price`) possuía **assimetria positiva de 0.96** e **curtose de 4.32**, indicando forte cauda à direita. A transformação **`log1p`** reduziu a assimetria para **-0.13** e a curtose para **-0.04**, aproximando os dados de uma distribuição normal teórica.
+
+<img width="983" height="584" alt="image" src="https://github.com/user-attachments/assets/62ef004c-9ec0-46bd-8c19-51406bdd4db8" />
 
 | Transformação | Assimetria | Curtose |
 |---------------|------------|---------|
@@ -36,7 +38,7 @@ Durante a Análise Exploratória (EDA), identificou-se que a distribuição de p
 | **Log1p** | **-0.13** | **-0.04** |
 | Sqrt | 0.33 | 0.58 |
 
-### 🔀 Bifurcação do Dataset
+### Bifurcação do Dataset
 
 Os dados foram estrategicamente separados em dois DataFrames distintos após o pré-processamento:
 
@@ -45,7 +47,7 @@ Os dados foram estrategicamente separados em dois DataFrames distintos após o p
 | **Dataset Linear** | Conjunto enxuto com **10 features** de baixa multicolinearidade (`gpu_tier`, `ram_gb`, `cpu_base_ghz`, etc.) | Ideal para modelos lineares (Ridge, Lasso, ElasticNet) |
 | **Dataset Tree** | Conjunto completo com One-Hot Encoding, Label Encoding e features de interação (**50+ features**) | Ideal para modelos não-lineares de boosting (XGBoost, LightGBM, CatBoost) |
 
-### 🧬 Engenharia de Features Avançada
+###  Engenharia de Features
 
 Foram criadas **12 features sintéticas** divididas em dois grupos:
 
@@ -68,21 +70,24 @@ Foram criadas **12 features sintéticas** divididas em dois grupos:
 | `gpu_power_by_year` | `gpu_tier × release_year` | Evita que GPU antigo tenha preço de GPU atual |
 | `cpu_power_by_year` | `cpu_cores × release_year` | Evita que CPU antigo tenha preço de CPU atual |
 
-### 🔍 Higienização via CatBoost
+<img width="426" height="784" alt="image" src="https://github.com/user-attachments/assets/e89beb84-79b3-47af-9fb3-3490dc76411b" />
+
+
+###  Remoção de Outliers via Catboost (Modelo de limpeza)
 
 Foi treinado um **CatBoost provisório** para detecção de anomalias. Linhas com resíduos (erro de previsão) superiores a **±$1.000** foram identificadas como outliers e removidas — totalizando **127 anomalias removidas** (0.16% dos dados).
 
-### 🛡️ Otimização Bayesiana com Optuna
+### Otimização Bayesiana com Optuna
 
 Diferente de buscas em grid tradicionais, foi utilizada **otimização bayesiana (TPE)** com **50 trials por modelo** e validação cruzada K-Fold (k=5), utilizando um **scorer customizado** que calcula o RMSE em dólares reais (revertendo a transformação logarítmica).
 
-### 🧠 Interpretabilidade com SHAP
+### Interpretabilidade com SHAP
 
 A análise SHAP revelou as features mais impactantes nas predições dos modelos de boosting, confirmando que `gpu_tier`, `power_index`, `ram_gb` e `resolution_norm` dominam as previsões.
 
 ---
 
-## 🧠 Modelagem e Algoritmos Avaliados
+## Modelagem e Algoritmos Avaliados
 
 Foram desenvolvidos e comparados **7 algoritmos** diferentes:
 
@@ -91,7 +96,7 @@ Foram desenvolvidos e comparados **7 algoritmos** diferentes:
 
 ---
 
-## 📊 Resultados Comparativos
+## Resultados Comparativos
 
 ### Modelos Lineares (treinados com 10 features essenciais)
 
@@ -110,17 +115,20 @@ Foram desenvolvidos e comparados **7 algoritmos** diferentes:
 |--------|------------|---------------|-----------|----------------|--------------|----------|
 | XGBoost | $131.01 | $134.13 | +$3.12 | $173.92 | 0.9049 | 0.44% |
 | LightGBM | $128.91 | $134.12 | +$5.21 | $174.00 | 0.9048 | 0.76% |
-| **CatBoost** ⭐ | $130.38 | **$133.51** | +$3.13 | **$173.16** | **0.9058** | **0.46%** |
+| **CatBoost**  | $130.38 | **$133.51** | +$3.13 | **$173.16** | **0.9058** | **0.46%** |
 
 > Os três modelos de boosting otimizados apresentam **desempenhos muito próximos**, com diferenças marginais de menos de $1 no RMSE. O CatBoost levou leve vantagem em todas as métricas de validação.
 
 ---
 
-## 🔬 Diagnósticos Visuais e Interpretabilidade
+##  Diagnósticos Visuais e Interpretabilidade
 
 ### 1. Dispersão Real vs. Predito
 
 Os três modelos de boosting apresentam **alta consistência nas previsões**, com agrupamentos coesos em torno da linha ideal de previsão. Os maiores desvios ocorrem no 4º quartil (computadores premium acima de $3.200).
+
+<img width="2090" height="617" alt="image" src="https://github.com/user-attachments/assets/3db10bae-e06b-463a-b661-bd2d1df15599" />
+
 
 ### 2. Distribuição dos Resíduos
 
@@ -136,6 +144,8 @@ Os três modelos de boosting apresentam **alta consistência nas previsões**, c
 
 Os três modelos apresentam **boa aderência à normalidade** na faixa central dos quantis (-3 a +3). Desvios aparecem apenas nas caudas extremas — computadores muito baratos (<$800) e muito caros (>$3.200) — um comportamento esperado dado que promoções e lançamentos não são capturáveis apenas pelas specs de hardware.
 
+<img width="2090" height="515" alt="image" src="https://github.com/user-attachments/assets/dde23dcf-6a2d-4703-bab4-4bf021fc3081" />
+
 ### 4. Análise SHAP — Features Mais Relevantes
 
 As features mais impactantes nas predições dos modelos de boosting:
@@ -147,6 +157,8 @@ As features mais impactantes nas predições dos modelos de boosting:
 | **ram_gb** | Quantidade de memória RAM |
 | **resolution_norm** | Qualidade da tela normalizada |
 | **os_macOS** | Indicador do ecossistema Apple |
+
+<img width="1057" height="691" alt="image" src="https://github.com/user-attachments/assets/3f859745-2287-4ef5-b837-f0ab482ae506" />
 
 ### 5. Coeficientes do Modelo Linear (Lasso)
 
@@ -161,7 +173,10 @@ As features mais impactantes nas predições dos modelos de boosting:
 
 ---
 
-## 🏆 Veredito: Melhor Modelo
+<img width="990" height="590" alt="image" src="https://github.com/user-attachments/assets/ff5d567f-f674-4e61-b625-933969d5abbf" />
+
+
+##  Veredito: Melhor Modelo
 
 O **CatBoost Otimizado** consolidou-se como o modelo mais maduro e confiável para este projeto:
 
@@ -183,7 +198,7 @@ O **CatBoost Otimizado** consolidou-se como o modelo mais maduro e confiável pa
 
 ---
 
-## 📁 Estrutura do Repositório
+##  Estrutura do Repositório
 
 ```
 Computer_Price_Predictor/
@@ -204,7 +219,7 @@ Computer_Price_Predictor/
 
 ---
 
-## 🚀 Como Executar Localmente
+##  Como Executar Localmente
 
 ### (1) Clone este repositório:
 
@@ -236,7 +251,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **Python 3.12**
 - **Pandas** / **NumPy** — Manipulação de dados
@@ -250,4 +265,4 @@ pip install -r requirements.txt
 ---
 
 *Desenvolvido por [Cauã Barreto](https://github.com/caua-barreto)*
-Desenvolvido por Cauã Barreto - Junior Data Scientist
+Junior Data Scientist
