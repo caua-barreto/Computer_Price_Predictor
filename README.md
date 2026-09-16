@@ -3,7 +3,7 @@
 ![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Boosting%20%26%20Linear-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
 ![Status](https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 
 ---
 
