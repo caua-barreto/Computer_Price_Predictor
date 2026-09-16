@@ -7,9 +7,18 @@
 
 ---
 
+##  Sobre a competição
+
+Este projeto foi desenvolvido como solução para uma competição de Machine Learning interna a alunos do Instituto Militar de Engenharia cujo objetivo é construir o melhor modelo preditivo para estimar o preço de computadores com base em mais de 30 features de hardware, design e conectividade.
+
+A avaliação considera não apenas a acurácia do modelo, mas a qualidade do projeto como um todo: organização do código, pipeline de tratamento, engenharia de features, análise de overfitting, métricas de desempenho (RMSE, MAE, R²) e robustez da validação cruzada.
+
+O dataset de validação é restrito ao avaliador, ou seja, o modelo será testado contra dados que o desenvolvedor nunca teve acesso. Por isso, todo o projeto foi executado utilizando exclusivamente o CSV de treino (computer_prices_train_80.csv, 80.000 linhas).
+
+
 ##  Sobre o Projeto
 
-Este repositório apresenta um projeto completo de **Machine Learning** para previsão de preços de computadores (laptops e desktops), utilizando um dataset de **80.000 registros** com **34 colunas** de especificações de hardware, design e conectividade.
+Este repositório apresenta um projeto de **Machine Learning** para previsão de preços de computadores (laptops e desktops), utilizando um dataset de **80.000 registros** com **34 colunas** de especificações de hardware, design e conectividade.
 
 O projeto está organizado em uma esteira de processamento com **4 notebooks** que cobrem desde a análise exploratória até a avaliação final dos modelos:
 
@@ -19,6 +28,7 @@ O projeto está organizado em uma esteira de processamento com **4 notebooks** q
 | 2 | `Tratamento.ipynb` | Pipeline de tratamento: encoding, engenharia de features, seleção e higienização |
 | 3 | `Modelagem.ipynb` | Treinamento e otimização de modelos lineares e baseados em árvore via Optuna |
 | 4 | `Avaliacao.ipynb` | Avaliação final, análise SHAP, diagnóstico de resíduos e veredito |
+| 5 | `testar_base.ipynb` | Arquivo para o avaliador testar com sua base de validação |
 
 O projeto foi totalmente desenvolvido em um ambiente virtual isolado (`.venv`) para garantir a reprodutibilidade das análises.
 
